@@ -25,6 +25,7 @@ type eventTracker interface {
 	walkConnections(f func(ebpfConnection))
 	feedInitialConnections(ci procspy.ConnIter, seenTuples map[string]fourTuple, hostNodeID string)
 	isReadyToHandleConnections() bool
+	isDead() bool
 	stop()
 }
 
@@ -99,7 +100,10 @@ var lastTimestampV4 uint64
 
 func tcpEventCbV4(e tracer.TcpV4) {
 	if lastTimestampV4 > e.Timestamp {
-		log.Errorf("ERROR: late event!\n")
+		// See https://github.com/weaveworks/scope/issues/2334
+		log.Debugf("tcp tracer received event with timestamp %v even though the last timestamp was %v. Stopping the eBPF tracker.", e.Timestamp, lastTimestampV4)
+		ebpfTracker.dead = true
+		ebpfTracker.stop()
 	}
 
 	lastTimestampV4 = e.Timestamp
@@ -195,6 +199,10 @@ func (t *EbpfTracker) feedInitialConnections(conns procspy.ConnIter, seenTuples 
 
 func (t *EbpfTracker) isReadyToHandleConnections() bool {
 	return t.readyToHandleConnections
+}
+
+func (t *EbpfTracker) isDead() bool {
+	return t.dead
 }
 
 func (t *EbpfTracker) stop() {
