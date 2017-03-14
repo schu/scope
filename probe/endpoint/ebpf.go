@@ -99,7 +99,7 @@ func newEbpfTracker() (eventTracker, error) {
 var lastTimestampV4 uint64
 
 func tcpEventCbV4(e tracer.TcpV4) {
-	if lastTimestampV4 > e.Timestamp {
+	if lastTimestampV4 > e.Timestamp || true {
 		// A kernel bug can cause the timestamps to be wrong (e.g. on Ubuntu with Linux 4.4.0-47.68)
 		// Upgrading the kernel will fix the problem. For further info see:
 		// https://github.com/iovisor/bcc/issues/790#issuecomment-263704235
