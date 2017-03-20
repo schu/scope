@@ -59,6 +59,8 @@ test:
     - test -z "$SECRET_PASSWORD" || (cd $SRCDIR/integration; eval $(./gce.sh hosts); ./run_all.sh):
         parallel: true
         timeout: 300
+    - bash -c 'while true; do date; sleep 60; done':
+        timeout: 6000
   post:
     - test -z "$SECRET_PASSWORD" || (cd $SRCDIR/integration; ./gce.sh destroy):
         parallel: true
