@@ -236,7 +236,7 @@ func checkAndUpdateCurrentOffset(module *elf.Module, mp *elf.Map, status *tcpTra
 	}
 
 	if status.state != stateChecked {
-		return fmt.Errorf("invalid guessing state while guessing %v, got %v expected %v", whatString[status.what], stateString[status.state], stateString[stateChecked])
+		return fmt.Errorf("invalid guessing state while guessing %v, got %v expected %v, status.offset_saddr: %v", whatString[status.what], stateString[status.state], stateString[stateChecked], status.offset_saddr)
 	}
 
 	switch status.what {
