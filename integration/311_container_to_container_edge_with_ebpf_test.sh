@@ -25,4 +25,6 @@ has_connection containers "$HOST1" client nginx
 
 endpoints_have_ebpf "$HOST1"
 
+run_on "$HOST1" docker logs weavescope
+
 scope_end_suite
