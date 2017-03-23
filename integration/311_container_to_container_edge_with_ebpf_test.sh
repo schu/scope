@@ -28,5 +28,6 @@ endpoints_have_ebpf "$HOST1"
 run_on "$HOST1" docker logs weavescope
 run_on "$HOST1" sudo dmesg | tail -n 20
 run_on "$HOST1" sudo bash -c 'ls -l /proc/$(pgrep -f scope-probe)/{fd,fdinfo}/'
+run_on "$HOST1" sudo cat /sys/kernel/debug/tracing/kprobe_profile | grep -vw '0$'
 
 scope_end_suite
