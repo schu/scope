@@ -28,6 +28,13 @@ const (
 	procEventFork = 0x00000001 // fork() events
 	procEventExec = 0x00000002 // exec() events
 	procEventExit = 0x80000000 // exit() events
+
+	procEventUid      = 0x00000004
+	procEventGid      = 0x00000040
+	procEventSid      = 0x00000080
+	provEventPtrace   = 0x00000100
+	procEventComm     = 0x00000200
+	procEventCoredump = 0x40000000
 )
 
 var (
@@ -310,6 +317,8 @@ func (pc *ProcConnector) handleEvent(data []byte) {
 			delete(pc.activePids, pid)
 		}
 
+	default:
+		log.Debugf("unhandled event: %#10x", hdr.What)
 	}
 }
 
